@@ -1,0 +1,14 @@
+#Open the file, read the numbers and create a usable list
+list = [int(x) for x in open('C:/users/rwillia8/Desktop/Day 1.txt').read().splitlines()]
+
+#A different way to open the file
+#with open('C:/users/rwillia8/Desktop/Day 1.txt') as f:
+#   list = [[int(x) for x in line.split()][0] for line in f]
+#print(list)
+
+#Code for three sum that works
+for i in list:
+    for j in list:
+        for k in list:
+            if i + j + k == 2020:
+                print(i*j*k)
