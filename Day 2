@@ -18,3 +18,22 @@ for index, i in enumerate(list):
         valid +=1
 
 print(valid)
+
+#Part 2
+list = [[x for x in line.split()] for line in open('C:/users/rwillia8/Desktop/Day 2.txt')]
+#print(len(list))
+#print(list)
+
+valid = 0
+
+for i in list:
+    low = int(i[0].split('-')[0])
+    high = int(i[0].split('-')[1])
+    letter = i[1].replace(':','')
+    pswd = i[2]
+    print(pswd[low])
+
+    if (pswd[low-1] == letter) ^ (pswd[high-1] == letter):
+        valid += 1
+
+print('Total valid is', valid)
