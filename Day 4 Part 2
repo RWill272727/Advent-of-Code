@@ -1,0 +1,69 @@
+import re
+
+with open(r'Day 4 Input.txt') as file:
+    data = file.read()
+
+passports = data.split('\n\n')
+
+fields = [
+    'byr', #(Birth Year)
+    'iyr', #(Issue Year)
+    'eyr', #(Expiration Year)
+    'hgt', #(Height)
+    'hcl', #(Hair Color)
+    'ecl', #(Eye Color)
+    'pid', #(Passport ID)
+    'cid'  #(Country ID)
+]
+def is_valid(passport):
+    fcopy = set(fields)
+    flist = re.split(' |\n', passport)
+    
+    for f in flist:
+        key = f[:f.index(':')]
+        value = f[f.index(':') + 1:]
+
+        if key == 'byr':
+            if not 1920 <= int(value) <= 2002:
+                return False
+        
+        elif key == 'iyr':
+            if not 2010 <= int(value) <= 2020:
+                return False
+        
+        elif key == 'eyr':
+            if not 2020 <= int(value) <= 2030:
+                return False
+        
+        elif key == 'hgt':
+            if not value[-2:] in ['in', 'cm']:
+                return False
+            if value[-2:] == 'in':
+                if not 59 <= int(value[:-2]) <= 76:
+                    return False
+            else:
+                if not 150 <= int(value[:-2]) <= 193:
+                    return False
+        
+        elif key == 'hcl':
+            if not re.fullmatch('#[0-9][a-f]{6}', value):
+                return False
+        
+        elif key == 'ecl':
+            if not re.fullmatch('amb|blu|brn|gry|grn|hzl|oth', value):
+                return False
+        
+        elif key == 'pid':
+            if not re.fullmatch('[0-9]{9}', value):
+                return False
+
+        fcopy.remove(key)
+    
+    if len(fcopy) == 1:
+        return fcopy.pop() == 'cid'
+    return len(fcopy) == 0
+
+total = 0
+for p in passports:
+    total += is_valid(p)
+print(total)
