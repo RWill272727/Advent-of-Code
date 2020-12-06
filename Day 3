@@ -1,0 +1,42 @@
+#open the file and use r in front to make it a raw string
+with open(r'c:\Users\cwilliams\Desktop\Python Files\Day 3 Input.txt') as file:
+    data = file.read()
+
+#call out the tree map by creating a list with all the lines of code. Each split from the next line
+tree_map = data.split('\n')
+
+#width of the map is the number of characters in each element and height is the total length of the list
+width = len(tree_map[0])
+height = len(tree_map)
+
+#write a function that starts at position 0,0 and works its way down counting the number of trees throughout
+def trees_total(right, down):
+    position = [0,0]
+    trees = 0
+
+    while position[0] < height:
+        trees += tree_map[position[0]][position[1]] == '#'
+        position[1] = (position[1]+right) % width
+        position[0] += down
+    return trees
+
+#Use a list of slopes to test multiple
+slopes = [
+    (1, 1),
+    (3, 1),
+    (5, 1),
+    (7, 1),
+    (1, 2)
+]
+
+#run the function for every slope and add to a list
+answers = []
+for right, down in slopes:
+    answers.append(trees_total(right, down))
+
+#multiply all the answers together
+prod = 1
+for i in answers:
+    prod *= i
+
+print(prod)
