@@ -1,0 +1,34 @@
+import re
+
+with open(r'Day 4 Input.txt') as file:
+    data = file.read()
+
+passports = data.split('\n\n')
+
+fields = [
+    'byr', #(Birth Year)
+    'iyr', #(Issue Year)
+    'eyr', #(Expiration Year)
+    'hgt', #(Height)
+    'hcl', #(Hair Color)
+    'ecl', #(Eye Color)
+    'pid', #(Passport ID)
+    'cid'  #(Country ID)
+]
+def is_valid(passport):
+    fcopy = set(fields)
+    flist = re.split(' |\n', passport)
+    for f in flist:
+        if ':' not in f:
+            print(repr(f))
+        field = f[:f.index(':')]
+        fcopy.remove(field)
+    
+    if len(fcopy) == 1:
+        return fcopy.pop() == 'cid'
+    return len(fcopy) == 0
+
+total = 0
+for p in passports:
+    total += is_valid(p)
+print(total)
