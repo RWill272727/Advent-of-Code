@@ -1,0 +1,42 @@
+#open file
+with open(r'C:/users/rwillia8/Desktop/Day 5 Input.txt') as file:
+    data = file.read()
+#split seats into a list based on return
+seats = data.split('\n')
+#initialize values
+p1 = 0
+ids = []
+
+#for loop on all boarding passes 
+for i in seats:
+#initialize rows and columns and the delta
+    col = 0
+    row = 0
+
+    row_diff = 64
+    col_diff = 4
+#for loop on each letter of the boarding passes
+    for j in i:
+#use binary method to decrease the delta number through each iteration        
+        if j == 'B':
+            row += row_diff
+        row_diff /= 2
+
+        if j == 'R':
+            col += col_diff
+            col_diff /= 2
+#include elif at the end so every letter is accounted for            
+        elif j == 'L':
+            col_diff /= 2
+#create the seat id value for every boarding pass and add to the ids list       
+    seat_id = row * 8 + col
+    ids.append(seat_id)
+#calculate the max seat id value by comparing p1 which is a new value each iteration to the next value to find the overall max value 
+    p1 = max(p1, seat_id)
+
+#for loop on the sorted list to find the one value that was missing
+for _id in sorted(ids):
+    if _id + 1 not in ids and _id + 2 in ids:
+        print(_id+1)
+
+print(p1)
