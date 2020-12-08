@@ -1,0 +1,43 @@
+#Part 1
+#open file
+with open(r'C:/users/rwillia8/Desktop/Day 6 Input.txt') as file:
+    data = file.read()
+
+# create function to count the length of the characters in each line
+#turn it into a set so that it's only unique characters and count them. Ignore returns by subtracting them out
+def unique_questions(group):
+    chars = set(group)
+    if '\n' in chars:
+        return len(chars) - 1
+    return len(chars)
+#split the data so that each group is within a single string and remove spaces
+groups = data.split('\n\n')
+#iterate through each element of groups using the function and total up the count
+total = 0
+for g in groups:
+    total += unique_questions(g)
+print(total)
+
+#Part 2
+import string
+#open file
+with open(r'C:/users/rwillia8/Desktop/Day 6 Input.txt') as file:
+    data = file.read()
+#create function, turn each group into it's own list, look through all letters of the alphabet, count where the letter is present in all
+def all_questions(group):
+    people = group.split('\n')
+    count = 0
+    for char in string.ascii_lowercase:
+        presentInAll = True
+        for p in people:
+            if char not in p:
+                presentInAll = False
+                break
+        count += presentInAll
+    return count
+#same ending as before
+groups = data.split('\n\n')
+total = 0
+for g in groups:
+    total += all_questions(g)
+print(total)
