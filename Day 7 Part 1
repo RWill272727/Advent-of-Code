@@ -1,0 +1,31 @@
+with open(r'C:/users/rwillia8/Desktop/Day 7 Input.txt') as file:
+    data = file.readlines()
+    data = [ line.strip() for line in data]
+
+def get_num_bags(color):
+    lines = [ line for line in data if color in line and line.index(color) != 0 ]
+
+    allColors = []
+
+    if len(lines) == 0: #If the bag doesn't hold anything other color len will be 0
+        return []
+
+    else:
+        colors = [ line[:line.index(' bags')] for line in lines ]
+        colors = [ color for color in colors if color not in allColors ] #allColors keep track of the colors we've checked, and we only need to check what hasn't already been checked
+
+        for color in colors:
+            allColors.append(color)
+            bags = get_num_bags(color) #This will find all the bags that hold the specified color
+
+            allColors += bags #all bags now in allColors, but need to check for duplicates
+
+        unique_colors = []
+        for color in allColors:
+            if color not in unique_colors:
+                unique_colors.append(color) #add the colors to the new list and remove duplicates
+
+        return unique_colors
+
+colors = get_num_bags('shiny gold')
+print(len(colors))
