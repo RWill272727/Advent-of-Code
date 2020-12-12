@@ -1,0 +1,75 @@
+with open('Day8input.txt') as file:
+    data = file.read()
+
+#Part 1
+program = data.split('\n')
+
+acc = 0
+step = 0
+def get_acc(instruction):
+    global acc #need to put variables outside of function and call within because function is run outside of code
+    global step
+
+    op, arg = instruction.split(" ") #create two variables at once after splitting each line
+
+    if op == 'acc':  #if statements for increasing the acc and step
+        acc += int(arg)
+        step += 1
+    elif op == 'jmp':
+        step += int(arg)
+    else:
+        step += 1
+
+seen = set()
+while step not in seen: #while loop to run until a line repeats itself
+    seen.add(step)
+    get_acc(program[step])
+print(acc)
+
+#Part 2
+with open('Day8input.txt') as file:
+    data = file.read()
+
+program = data.split('\n')
+
+def find_line(program):
+    acc = 0
+    step = 0
+    def get_acc(instruction):
+        op, arg = instruction.split(" ")
+        if op == 'acc':
+            return int(arg), 1
+            step += 1
+        elif op == 'jmp':
+            return 0, int(arg)
+        else:
+            return 0, 1
+
+    seen = set()
+    acc = 0
+    step = 0
+    while step not in seen and step < len(program):
+        seen.add(step)
+        accumulator, jump = get_acc(program[step])
+        acc += accumulator
+        step += jump
+
+    if step >= len(program):
+        return acc
+    return None
+
+for i in range(len(program)):
+    if program[i].startswith('acc'):
+        continue
+    if program[i].startswith('nop'):
+        copy = program.copy()
+        copy[i] = 'jmp' + copy[i][3:]
+
+    else:
+        copy = program.copy()
+        copy[i] = 'nop' + copy[i][3:]
+
+    x = find_line(copy)
+    if x:
+        print(x)
+        break
