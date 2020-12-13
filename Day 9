@@ -1,0 +1,46 @@
+with open('Day9input.txt') as file:
+    data = file.read().split('\n') #this reads the numbers as strings
+    data = [ int(line.strip()) for line in data ] #this turns the strings into ints
+
+#Loop through the numbers and find the single number that has no previous two numbers within the last 25 that add up to it
+def get_bad_num():
+    for i in range(25, len(data)):
+        preamble = data[i-25:i]
+        num = data[i]
+        found = False
+
+        for j in range(len(preamble)):
+            for k in range(j+1, len(preamble)):
+                if preamble[j] + preamble[k] == num:
+                    found = True
+                    break
+            if found:
+                break
+
+        if found:
+            continue
+
+        return num
+
+print(get_bad_num())
+
+#Part 2
+#Loop through all the numbers in the list and find the consecutive numbers that add up to the bad number
+def get_key():
+    bad_num = get_bad_num()
+    found = False
+    for i in range(len(data)):
+        nums = [data[i]]
+        for j in range(i+1, len(data)):
+            nums.append(data[j])
+            if sum(nums) == bad_num:
+                found = True
+                break
+            elif sum(nums) > bad_num:
+                break
+        if found:
+            break
+
+    return min(nums) + max(nums)
+
+print(get_key())
