@@ -1,0 +1,37 @@
+with open('C:/users/rwillia8/Desktop/Day10Input.txt') as file:
+    data = [ int(i) for i in file.read().split('\n') ]
+
+data.append(0)
+data.append(max(data)+3)
+data.sort()
+
+#Part 1
+def get_diff():
+    count1 = 0
+    count3 = 0
+    for i in range(len(data)-1):
+        diff = data[i+1] - data[i]
+        if diff == 1:
+            count1 += 1
+        elif diff == 3:
+            count3 += 1
+
+    return count1 * count3
+
+print(get_diff())
+
+#Part 2
+checked = {} # keep track of what we've already found
+def get_num(position):
+    if position == len(data) - 1: #start with the very end of the list and there's only 1 combination
+        return 1
+    if position in checked: #double check whether we've seen a number already
+        return checked[position]
+
+    total = 0
+    for i in range(position+1, len(data)): #recursive function starting at the end and counting the ways of getting to the end
+        if data[i] - data[position] <= 3:
+            total += get_num(i)
+    checked[position] = total
+    return total
+print(get_num(0))
