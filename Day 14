@@ -1,0 +1,91 @@
+with open('C:/users/rwillia8/Desktop/Day14Input.txt') as file:
+    data = file.readlines()
+    data = [ line.strip() for line in data ]
+
+def to_binary(decimal:int):
+    bits = []
+    while decimal != 0:
+        bits.append(str(decimal%2))
+        decimal = decimal // 2
+    bits.reverse()
+    s = ''
+    s = s.join(bits)
+    while len(s) != 36:
+        s = '0' + s
+    return s
+
+def to_decimal(binary):
+    while binary[0] == '0':
+        binary = binary[1:]
+    decimal = 0
+    for i in range(len(binary)):
+        j = len(binary) - i - 1
+        decimal += int(binary[j]) * (2 ** i)
+    return decimal
+
+def get_mem_total():
+    mem = {}
+    mask = ''
+    for line in data:
+        line = line.split(' = ')
+        if 'mask' in line[0]:
+            mask = line[1]
+        else:
+            location = line[0][4:-1]
+            value = int(line[1])
+            val_bin = list(to_binary(value))
+
+            for i in range(len(mask)):
+                if mask[i] != 'X':
+                    val_bin[i] = mask[i]
+            masked_str = ''
+            masked_str = masked_str.join(val_bin)
+            masked_num = to_decimal(masked_str)
+            mem[location] = masked_num
+    total = 0
+    for i in mem.values():
+        total += i
+    return total
+
+#Part 2
+
+def get_addresses(s):
+    if 'X' not in s:
+        return s
+
+    else:
+        addresses = ''
+        xi = s.index('X')
+        s0 = s[:xi] + '0' + s[xi+1:]
+        s1 = s[:xi] + '1' + s[xi+1:]
+        addresses += get_addresses(s0) + ','
+        addresses += get_addresses(s1)
+        return addresses
+
+def address_mask_total():
+    mem = {}
+    mask = ''
+    for line in data:
+        line = line.split(' = ')
+        if 'mask' in line[0]:
+            mask = line[1]
+        else:
+            value = int(line[1])
+            loc = int(line[0][4:-1])
+            loc_bin = list(to_binary(loc))
+
+            for i in range(len(mask)):
+                if mask[i] != '0':
+                    loc_bin[i] = mask[i]
+            masked_loc = ''
+            masked_loc = masked_loc.join(loc_bin)
+            addresses = get_addresses(masked_loc).split(',')
+            for address in addresses:
+                mem[address] = value
+
+    total = 0
+    for i in mem.values():
+        total += i
+    return total
+
+print(address_mask_total())
