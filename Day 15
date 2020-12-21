@@ -1,0 +1,20 @@
+list = [19,0,5,1,10,13]
+
+def play_mem_game():
+    mem = {}
+    for i in range(len(list)-1):
+        num = list[i]
+        mem[num] = i
+    for i in range(len(list)-1, 30000000-1):
+        num = list[i]
+        if num not in mem:
+            list.append(0)
+            mem[num] = i
+        else:
+            j = mem[num]
+            new_num = i - j
+            list.append(new_num)
+            mem[num] = i
+    return list[-1]
+
+print(play_mem_game())
