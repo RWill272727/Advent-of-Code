@@ -1,0 +1,86 @@
+with open('C:/users/rwillia8/Desktop/Day19Input.txt') as file:
+    data = file.read().split('\n')
+    rules_data = data[:data.index('')]
+    msgs = data[data.index('')+1:]
+
+#Parse out the rules
+rules = {}
+for line in rules_data:
+    line = line.split(': ')
+    rule_num = int(line[0])
+    options = []
+    option_str = line[1].split(' | ')
+    for op in option_str:
+        options.append(op.split())
+    rules[rule_num] = options
+
+str_rules = {}
+def solve1(num):
+    rule_opt = rules[num]
+    if ['"a"'] in rule_opt:
+        return ['a']
+    if ['"b"'] in rule_opt:
+        return ['b']
+    if num in str_rules:
+        return str_rules[num]
+    final = []
+    for option in rule_opt:
+        str_ops = []
+        for rule in option:
+            sub_ops = solve1(int(rule))
+            if len(str_ops) == 0:
+                str_ops = sub_ops.copy()
+            else:
+                combined = []
+                for s in sub_ops:
+                    for op in str_ops:
+                        combined.append(op+s)
+                str_ops = combined.copy()
+        final += str_ops
+    str_rules[num] = final
+    return final
+all_poss = solve1(0)
+all_set = set()
+for a in all_poss:
+    all_set.add(a)
+
+count = 0
+for msg in msgs:
+    if msg in all_set:
+        count += 1
+print(count)
+#Part 2
+def solve2():
+    r42 = str_rules[42]
+    r31 = str_rules[31]
+    chunk_size = len(r42[0])
+    #loop the reverse way through msgs to check rule 42 and 31 specifically apply
+    count = 0
+    for msg in msgs:
+        chunk42 = [False for _ in range(len(msg) // chunk_size)]
+        chunk31 = [False for _ in range(len(msg) // chunk_size)]
+        #Determine which chunks come from which rules
+        current_chunk = 0
+        for i in range(0, len(msg), chunk_size):
+            if msg[i:i+chunk_size] in r42:
+                chunk42[current_chunk] = True
+            if msg[i:i+chunk_size] in r31:
+                chunk31[current_chunk] = True
+            current_chunk += 1
+        #Does this message match the rules?
+        count42, count31 = 0,0
+        current_chunk = 0
+        if chunk42[current_chunk] == True:
+            count42 += 1
+            current_chunk += 1
+            while current_chunk < len(chunk42) and chunk42[current_chunk]:
+                count42 += 1
+                current_chunk += 1
+            while current_chunk < len(chunk31) and chunk31[current_chunk]:
+                count31 += 1
+                current_chunk += 1
+            if current_chunk == len(chunk31) and 0 < count31 < count42:
+                count += 1
+    return count
+
+print(solve2())
